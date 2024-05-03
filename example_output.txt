@@ -3,9 +3,9 @@ PS C:\GraphListAppProtocols> .\Get-AppProtocols.ps1
 ApplicationId         : 00000000-0000-0000-0000-111111111111
 DisplayName           : OnBehalfOf
 NotSingleTenantOnly   : Disabled
-ROPC                  : Enabled
-DeviceCode            : Enabled
-WindowsIntegratedAuth : Enabled
+ROPC                  : Disabled
+DeviceCode            : Disabled
+WindowsIntegratedAuth : Disabled
 ImplictFlow           : Disabled
 HybridFlow            : Disabled
 SPAAuthCodeFlow       : Disabled
@@ -27,9 +27,9 @@ onBehalfOfFlow        : Disabled
 ApplicationId         : 00000000-0000-0000-0000-333333333333
 DisplayName           : Multi-Tenant
 NotSingleTenantOnly   : Enabled
-ROPC                  : Enabled
-DeviceCode            : Enabled
-WindowsIntegratedAuth : Enabled
+ROPC                  : Disabled
+DeviceCode            : Disabled
+WindowsIntegratedAuth : Disabled
 ImplictFlow           : Disabled
 HybridFlow            : Disabled
 SPAAuthCodeFlow       : Disabled
@@ -39,9 +39,9 @@ onBehalfOfFlow        : Disabled
 ApplicationId         : 00000000-0000-0000-0000-444444444444
 DisplayName           : SPA
 NotSingleTenantOnly   : Disabled
-ROPC                  : Enabled
-DeviceCode            : Enabled
-WindowsIntegratedAuth : Enabled
+ROPC                  : Disabled
+DeviceCode            : Disabled
+WindowsIntegratedAuth : Disabled
 ImplictFlow           : Disabled
 HybridFlow            : Disabled
 SPAAuthCodeFlow       : Enabled
@@ -51,9 +51,9 @@ onBehalfOfFlow        : Disabled
 ApplicationId         : 00000000-0000-0000-0000-555555555555
 DisplayName           : SPA Multi-Tenant
 NotSingleTenantOnly   : Enabled
-ROPC                  : Enabled
-DeviceCode            : Enabled
-WindowsIntegratedAuth : Enabled
+ROPC                  : Disabled
+DeviceCode            : Disabled
+WindowsIntegratedAuth : Disabled
 ImplictFlow           : Disabled
 HybridFlow            : Disabled
 SPAAuthCodeFlow       : Enabled
@@ -75,9 +75,9 @@ onBehalfOfFlow        : Disabled
 ApplicationId         : 00000000-0000-0000-0000-777777777777
 DisplayName           : Just Implicit
 NotSingleTenantOnly   : Disabled
-ROPC                  : Enabled
-DeviceCode            : Enabled
-WindowsIntegratedAuth : Enabled
+ROPC                  : Disabled
+DeviceCode            : Disabled
+WindowsIntegratedAuth : Disabled
 ImplictFlow           : Disabled
 HybridFlow            : Disabled
 SPAAuthCodeFlow       : Disabled

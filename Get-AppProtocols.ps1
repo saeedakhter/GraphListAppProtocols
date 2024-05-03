@@ -30,9 +30,9 @@ function Get-PublicClientAppDetails {
     # Function to retrieve and process application details
     function Process-App($app) {
         # Safely extract protocol settings (handle null values)
-        $ropcFlow = if ($app.publicClient -ne $null -and $app.publicClient) { "Enabled" } else { "Disabled" }
-        $deviceCodeFlow = if ($app.publicClient -ne $null -and $app.publicClient) { "Enabled" } else { "Disabled" }
-        $windowsAuthFlow = if ($app.publicClient -ne $null -and $app.publicClient) { "Enabled" } else { "Disabled" }
+        $ropcFlow = if ($app.IsFallbackPublicClient -ne $null) { "Enabled" } else { "Disabled" }
+        $deviceCodeFlow = if ($app.IsFallbackPublicClient -ne $null) { "Enabled" } else { "Disabled" }
+        $windowsAuthFlow = if ($app.IsFallbackPublicClient -ne $null) { "Enabled" } else { "Disabled" }
         $notSingleTenantOnly = if ($app.signInAudience -eq "AzureADMyOrg") { "Disabled" } else { "Enabled" }
         $implicitFlow = if ($app.oauth2AllowImplicitFlow -ne $null -and $app.oauth2AllowImplicitFlow) { "Enabled" } else { "Disabled" }
         $hybridFlow = if ($app.oauth2AllowIdTokenImplicitFlow -ne $null -and $app.oauth2AllowIdTokenImplicitFlow) { "Enabled" } else { "Disabled" }
