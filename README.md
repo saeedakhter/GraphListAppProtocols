@@ -11,8 +11,6 @@ First install the Microsoft.Graph PowerShell module (https://learn.microsoft.com
 1. Install the Microsoft.Graph PowerShell module if not already present.  Open a Powershell command line as Administrator, run Install-Module -Name Microsoft.Graph
 2. Establish a connection to Microsoft Graph using `Connect-MgGraph` with appropriate scopes. 
 
-**Example Usage:**
-
 
 ## Usage
 The command below will create a csv of all the apps in the tenant that rely on the Azure AD Graph.
@@ -27,7 +25,7 @@ Connect-MgGraph -Scopes Application.Read.All
 Output to csv:
 
 ```powershell
-Connect-AzureAD
+Connect-MgGraph -Scopes Application.Read.All
 .\Get-AppProtocols.ps1 | Export-Csv .\apps.csv -NoTypeInformation  
 ```
 
