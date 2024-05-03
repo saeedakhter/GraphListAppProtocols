@@ -4,16 +4,19 @@ This PowerShell script lists the protocols enabled for every application in your
 
 ## Prerequisites
 
-First install the Microsoft.Graph PowerShell module (https://learn.microsoft.com/powershell/microsoftgraph/)
+The Microsoft.Graph PowerShell module is required (https://learn.microsoft.com/powershell/microsoftgraph/)
 
 **Before running this script:**
 
-1. Install the Microsoft.Graph PowerShell module if not already present.  Open a Powershell command line as Administrator, run Install-Module -Name Microsoft.Graph
+1. Install the Microsoft.Graph PowerShell module if not already present.  Open a Powershell command line as Administrator, run:
+```powershell
+Install-Module -Name Microsoft.Graph
+```
 2. Establish a connection to Microsoft Graph using `Connect-MgGraph` with appropriate scopes. 
 
 
 ## Usage
-The command below will create a csv of all the apps in the tenant that rely on the Azure AD Graph.
+The command below will list the protocols enabled for every application in your tenant.
 
 Output to console:
 
