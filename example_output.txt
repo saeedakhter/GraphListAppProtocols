@@ -1,0 +1,85 @@
+PS C:\GraphListAppProtocols> .\Get-AppProtocols.ps1
+
+ApplicationId         : 00000000-0000-0000-0000-111111111111
+DisplayName           : OnBehalfOf
+NotSingleTenantOnly   : Disabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Disabled
+clientCredentialsFlow : Disabled
+onBehalfOfFlow        : Enabled
+
+ApplicationId         : 00000000-0000-0000-0000-222222222222
+DisplayName           : Test Client Credentials
+NotSingleTenantOnly   : Disabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Disabled
+clientCredentialsFlow : Enabled
+onBehalfOfFlow        : Disabled
+
+ApplicationId         : 00000000-0000-0000-0000-333333333333
+DisplayName           : Multi-Tenant
+NotSingleTenantOnly   : Enabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Disabled
+clientCredentialsFlow : Disabled
+onBehalfOfFlow        : Disabled
+
+ApplicationId         : 00000000-0000-0000-0000-444444444444
+DisplayName           : SPA
+NotSingleTenantOnly   : Disabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Enabled
+clientCredentialsFlow : Disabled
+onBehalfOfFlow        : Disabled
+
+ApplicationId         : 00000000-0000-0000-0000-555555555555
+DisplayName           : SPA Multi-Tenant
+NotSingleTenantOnly   : Enabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Enabled
+clientCredentialsFlow : Disabled
+onBehalfOfFlow        : Disabled
+
+ApplicationId         : 00000000-0000-0000-0000-666666666666
+DisplayName           : HybridFlow
+NotSingleTenantOnly   : Disabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Disabled
+clientCredentialsFlow : Disabled
+onBehalfOfFlow        : Disabled
+
+ApplicationId         : 00000000-0000-0000-0000-777777777777
+DisplayName           : Just Implicit
+NotSingleTenantOnly   : Disabled
+ROPC                  : Enabled
+DeviceCode            : Enabled
+WindowsIntegratedAuth : Enabled
+ImplictFlow           : Disabled
+HybridFlow            : Disabled
+SPAAuthCodeFlow       : Disabled
+clientCredentialsFlow : Disabled
+onBehalfOfFlow        : Disabled
