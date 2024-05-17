@@ -1,8 +1,9 @@
-# Requires -PSEdition Desktop
-
+#Requires -PSEdition Desktop
 <#
 .SYNOPSIS
-Identifies protocols allowed for each application in the signed in user's tenant.  The user requires Application Admin to consent Application.Read.All.
+Using Sign-In logs is the recommended approach to idenify protocols in use by applications. This script is a temporary solution to try to idenify protocols that might be in use by applications while Sign-In Logs is updated to have more comprehensive protocol data.
+
+This script enumerats each application in the tenant and identifies the protocols that might be in use. The user requires Application Admin to consent Application.Read.All.
 
 **Requirements:**
 
@@ -30,33 +31,63 @@ function Get-PublicClientAppDetails {
     # Function to retrieve and process application details
     function Process-App($app) {
         # Safely extract protocol settings (handle null values)
-        $ropcFlow = if ($app.IsFallbackPublicClient -ne $null) { "Enabled" } else { "Disabled" }
-        $deviceCodeFlow = if ($app.IsFallbackPublicClient -ne $null) { "Enabled" } else { "Disabled" }
-        $windowsAuthFlow = if ($app.IsFallbackPublicClient -ne $null) { "Enabled" } else { "Disabled" }
-        $notSingleTenantOnly = if ($app.signInAudience -eq "AzureADMyOrg") { "Disabled" } else { "Enabled" }
-        $implicitFlow = if ($app.oauth2AllowImplicitFlow -ne $null -and $app.oauth2AllowImplicitFlow) { "Enabled" } else { "Disabled" }
-        $hybridFlow = if ($app.oauth2AllowIdTokenImplicitFlow -ne $null -and $app.oauth2AllowIdTokenImplicitFlow) { "Enabled" } else { "Disabled" }
-        $spaAuthCodeFlow = if ($app.spa -and $app.spa.redirectUris -and $app.spa.redirectUris.Count -gt 0) { "Enabled" } else { "Disabled" }
-        $clientCredentialsFlow = if ($app.keyCredentials -or $app.passwordCredentials -or $app.federatedIdentityCredentials) { "Enabled" } else { "Disabled" }
-        $onBehalfOfFlow = if ($app.identifierUris) { "Enabled"  } else { "Disabled" }
+        $tenantType = switch ($app.signInAudience) {
+                "AzureADMyOrg" { "Single Tenant" }
+                "AzureADMultipleOrgs" { "Multi-Tenant" }
+                "AzureADandPersonalMicrosoftAccount" { "Multi-Tenant and Consumer" }
+                default { "Unknown" }
+            }
+        $implicitFlow = if ($app.Web -ne $null -and $app.Web.ImplicitGrantSettings.EnableAccessTokenIssuance) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+        $hybridFlow = if ($app.Web -ne $null -and $app.Web.ImplicitGrantSettings.EnableIdTokenIssuance) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+
+        # Detect if SPA redirect URI is set
+        $spaAuthCodeFlow = if ($app.spa -and $app.spa.redirectUris -and $app.spa.redirectUris.Count -gt 0) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+
+        $clientCredentialSet = $app.keyCredentials -or $app.passwordCredentials -or $app.federatedIdentityCredentials
+
+        # to do a client credentials flow, the app registration must have a cred
+        $clientCredentialsFlow = if ($clientCredentialSet) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+
+        # IsFallbackPublicClient allows public client flows by direct user grant 
+        $ropcFlow = if ($app.IsFallbackPublicClient -ne $null -and $app.IsFallbackPublicClient -ne $false) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+        $deviceCodeFlow = if ($app.IsFallbackPublicClient -ne $null -and $app.IsFallbackPublicClient -ne $false) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+        $windowsAuthFlow = if ($app.IsFallbackPublicClient -ne $null -and $app.IsFallbackPublicClient -ne $false) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+        
+        # if app has a crednetial we support confidential ROPC/SAML
+        $ropcConfidentialFlow = if ($clientCredentialSet -or $app.IsFallbackPublicClient -ne $null) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+
+        # OBO can use the GUID of the app even if an app Identifier URI is not set, the only app reg setting required is a cred
+        $onBehalfOfFlow = if ($clientCredentialSet) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+
+        # Detect if Web redirect URI is set
+        $webRedirectURI = if ($app.web -and $app.web.redirectUris -and $app.web.redirectUris.Count -gt 0) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
+
+        # Detect if PublicClient redirect URI is set (for desktop/mobile)
+        $publicClientAuthCodeFlow = if ($app.PublicClient -and $app.PublicClient.redirectUris -and $app.PublicClient.redirectUris.Count -gt 0) { "disabling protocol might impact this app" } else { "app not configured for protocol" }
 
         # --- Debug Output --- 
         #Write-Host "*** BEGIN DEBUG - All properties of \$app ***"
         #$app | Format-List * 
         #Write-Host "*** END DEBUG ***"
-
         Write-Output (New-Object PSObject -Property ([ordered]@{
-            "ApplicationId"                   = $app.AppId
-            "DisplayName"                     = $app.DisplayName 
-            "NotSingleTenantOnly"             = $notSingleTenantOnly
-            "ROPC"                            = $ropcFlow
-            "DeviceCode"                      = $deviceCodeFlow
-            "WindowsIntegratedAuth"           = $windowsAuthFlow
-            "ImplictFlow"                     = $implicitFlow
-            "HybridFlow"                      = $hybridFlow
-            "SPAAuthCodeFlow"                 = $spaAuthCodeFlow
-            "clientCredentialsFlow"           = $clientCredentialsFlow
-            "onBehalfOfFlow"                  = $onBehalfOfFlow
+            "ApplicationId"                                              = $app.AppId
+            "DisplayName"                                                = $app.DisplayName 
+            "Tenants allowed"                                            = $tenantType
+            "OAuth2.0 Auth Code Flow Desktop/Mobile (with/without PKCE)" = $publicClientAuthCodeFlow
+            "OAuth2.0 Auth Code Flow SPA/CORS (with/without PKCE)"       = $spaAuthCodeFlow
+            "OAuth2.0 Implicit Flow for SPA"                             = $implicitFlow
+            "OAuth2.0 Implicit Hybrid Flow for Web"                      = $hybridFlow
+            "OAuth2.0 Device Code Flow"                                  = $deviceCodeFlow
+            "OAuth2.0 Client Credentials"                                = $clientCredentialsFlow
+            "OAuth2.0 On Behalf Of"                                      = $onBehalfOfFlow
+            "OAuth2.0 Open ID Connect"                                   = $webRedirectURI
+            "OAuth2.0 Confidential Client - ROPC"                        = $ropcConfidentialFlow
+            "OAuth2.0 Desktop App - ROPC"                                = $ropcFlow
+            "OAuth2.0 Desktop App - Win Integrated Auth"                 = $windowsAuthFlow
+            "OAuth2.0 Token Exchange"                                    = "unknown"
+            "SAML2.0 WS-Federation"                                      = "unknown"
+            "Entra Kerberos"                                             = "unknown"
+            "WS-Trust Seamless Single Sign On"                           = "unknown"
         }))
     }
 
